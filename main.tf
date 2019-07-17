@@ -15,12 +15,12 @@ locals {
   }
 
   alb_tags = {
-    MarkupTerraformReference = "${var.project}-alb-sg"
+    MarkupTerraformReference = "${var.project}-alb"
     Name                     = "${var.project}-alb"
   }
 
   asg_tags = {
-    MarkupTerraformReference = "${var.project}-alb-sg"
+    MarkupTerraformReference = "${var.project}-asg"
     Name                     = "${var.project}-asg"
   }
 }
