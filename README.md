@@ -17,7 +17,7 @@ Simple & opinionated module to create an ALB with an ASG for Varnish,Nginx,HAPro
 resource "aws_security_group" "varnish_sg" {
   name = "varnish-sg"
 
-  # Allow Varnish EC2 to speak to the Internet
+  # Allow Varnish EC2 to speak to the Internet (you might not want this... OS updates though etc)
   egress {
     from_port = 0
     to_port   = 65535
@@ -48,6 +48,7 @@ resource "aws_launch_template" "varnish_template" {
   }
 }
 
+# Creates a Auto Scaling Group, Load Balancer and Target Group for Varnish
 module "my_asg_and_alb" {
   source = "github.com/usemarkup/terraform-asg-alb/"
 
@@ -63,6 +64,7 @@ module "my_asg_and_alb" {
   region = "${var.region}"
 }
 
+# Allow ALB to speak to Varnish
 resource "aws_security_group_rule" "varnish_sg_in_from_alb" {
   from_port = 80
   protocol = "tcp"
@@ -72,6 +74,7 @@ resource "aws_security_group_rule" "varnish_sg_in_from_alb" {
   type = "ingress"
 }
 
+# Allow traffic out from Varnish to the ALB
 resource "aws_security_group_rule" "alb_out_to_varnish_sg" {
   from_port = 80
   protocol = "tcp"
