@@ -1,5 +1,4 @@
-variable "region" {
-}
+variable "region" {}
 
 variable "vpc_id" {
   type = "string"

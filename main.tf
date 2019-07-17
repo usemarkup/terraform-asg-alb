@@ -1,4 +1,5 @@
 provider "tls" {}
+
 provider "aws" {
   region = "${var.region}"
 }
@@ -10,15 +11,17 @@ data "aws_vpc" "vpc" {
 locals {
   alb_sg_tags = {
     MarkupTerraformReference = "${var.project}-alb-sg"
-    Name = "${var.project}-alb-sg"
-  },
+    Name                     = "${var.project}-alb-sg"
+  }
+
   alb_tags = {
     MarkupTerraformReference = "${var.project}-alb-sg"
-    Name = "${var.project}-alb"
-  },
+    Name                     = "${var.project}-alb"
+  }
+
   asg_tags = {
     MarkupTerraformReference = "${var.project}-alb-sg"
-    Name = "${var.project}-asg"
+    Name                     = "${var.project}-asg"
   }
 }
 
@@ -65,8 +68,9 @@ resource "aws_security_group" "alb_sg" {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
+
     cidr_blocks = [
-      "0.0.0.0/0"
+      "0.0.0.0/0",
     ]
   }
 
@@ -81,12 +85,14 @@ resource "aws_security_group" "alb_sg" {
 
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
+
   # WE CANNOT USE v4 UNTIL TF 0.12
   version = "~> 3.0"
 
   security_groups = [
-    "${aws_security_group.alb_sg.id}"
+    "${aws_security_group.alb_sg.id}",
   ]
+
   subnets = "${var.public_subnet_ids}"
   vpc_id  = "${var.vpc_id}"
 
@@ -94,6 +100,7 @@ module "alb" {
   logging_enabled          = "false"
   http_tcp_listeners_count = 0
   https_listeners_count    = 1
+
   https_listeners = [
     {
       certificate_arn = "${data.aws_acm_certificate.cert.arn}"
@@ -144,7 +151,7 @@ resource "aws_autoscaling_group" "asg" {
 
   termination_policies = [
     "OldestLaunchTemplate",
-    "OldestInstance"
+    "OldestInstance",
   ]
 
   health_check_grace_period = 60
