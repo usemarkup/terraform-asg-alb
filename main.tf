@@ -134,7 +134,7 @@ module "alb" {
     health_check_port                = "traffic-port"
     health_check_timeout             = 5
     health_check_unhealthy_threshold = 3
-    health_check_matcher             = "200-299"
+    health_check_matcher             = "${var.health_check_matcher}"
     stickiness_enabled               = false
     target_type                      = "instance"
     slow_start                       = 30
@@ -142,10 +142,10 @@ module "alb" {
 }
 
 resource "aws_autoscaling_group" "asg" {
-  desired_capacity    = 2
-  max_size            = 5
-  min_size            = 2
-  default_cooldown    = 30
+  desired_capacity    = "${var.asg_desired_capacity}"
+  max_size            = "${var.asg_max_size}"
+  min_size            = "${var.asg_min_size}"
+  default_cooldown    = "${var.asg_default_cooldown}"
   vpc_zone_identifier = ["${var.private_subnet_ids}"]
   name                = "${var.project}-asg"
 
@@ -154,7 +154,7 @@ resource "aws_autoscaling_group" "asg" {
     "OldestInstance",
   ]
 
-  health_check_grace_period = 60
+  health_check_grace_period = "${var.asg_health_check_grace_period}"
 
   target_group_arns = ["${module.alb.target_group_arns}"]
 

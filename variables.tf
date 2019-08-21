@@ -44,9 +44,17 @@ variable "asg_health_check_grace_period" {
 }
 
 variable "asg_max_size" {
-  default = 4
+  default = 6
+}
+
+variable "asg_min_size" {
+  default = 2
 }
 
 variable "asg_desired_capacity" {
   default = 2
+}
+
+variable "health_check_matcher" {
+  default = "200-299"
 }
