@@ -153,6 +153,8 @@ resource "aws_autoscaling_group" "asg" {
     "OldestLaunchTemplate",
     "OldestInstance",
   ]
+  
+  health_check_type = "ELB"
 
   health_check_grace_period = "${var.asg_health_check_grace_period}"
 
